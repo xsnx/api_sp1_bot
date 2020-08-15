@@ -13,8 +13,8 @@ CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
 
 def parse_homework_status(homework):
-    homework_name = ...
-    if ...
+    homework_name = homework['homework_name']
+    if homework['status'] != 'approved':
         verdict = 'К сожалению в работе нашлись ошибки.'
     else:
         verdict = 'Ревьюеру всё понравилось, можно приступать к следующему уроку.'
@@ -22,14 +22,18 @@ def parse_homework_status(homework):
 
 
 def get_homework_statuses(current_timestamp):
-    ...
-    homework_statuses = ...
+    headers = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
+    data = {
+        'from_date': current_timestamp,
+    }
+    url = "https://praktikum.yandex.ru/api/user_api/homework_statuses/"
+    homework_statuses = requests.get(f'{url}', headers=headers, params=data)
     return homework_statuses.json()
 
 
 def send_message(message):
-    ...
-    return bot.send_message(...)
+    bot = telegram.Bot(token=TELEGRAM_TOKEN)
+    return bot.send_message(chat_id=CHAT_ID, text=message)
 
 
 def main():
