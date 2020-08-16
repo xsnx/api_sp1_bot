@@ -3,6 +3,12 @@ import requests
 import telegram
 import time
 from dotenv import load_dotenv
+import logging
+
+logging.basicConfig(level=logging.WARNING, filename='app.log',
+                    format='%(asctime)s - %(message)s')
+log_bot_info = logging.getLogger('log_bot')
+log_bot_info.setLevel('INFO')
 
 load_dotenv()
 
@@ -13,7 +19,9 @@ CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
 
 def parse_homework_status(homework):
-    homework_name = homework['homework_name']
+    homework_name = homework.get('homework_name')
+    if homework_name is None:
+        return f'Ответ сервера неверен \n{homework}'
     if homework['status'] != 'approved':
         verdict = 'К сожалению в работе нашлись ошибки.'
     else:
@@ -22,12 +30,18 @@ def parse_homework_status(homework):
 
 
 def get_homework_statuses(current_timestamp):
+    if current_timestamp is None:
+        return 'current_timestamp is None'
     headers = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
     data = {
         'from_date': current_timestamp,
     }
     url = "https://praktikum.yandex.ru/api/user_api/homework_statuses/"
-    homework_statuses = requests.get(f'{url}', headers=headers, params=data)
+    try:
+        homework_statuses = requests.get(f'{url}', headers=headers, params=data)
+    except Exception as e:
+        logging.exception(f"Exception - {e}")
+        print(f'Ошибка запроса: {e}')
     return homework_statuses.json()
 
 
@@ -48,6 +62,7 @@ def main():
             time.sleep(300)  # опрашивать раз в пять минут
 
         except Exception as e:
+            logging.exception(f"Exception - {e}")
             print(f'Бот упал с ошибкой: {e}')
             time.sleep(5)
             continue
