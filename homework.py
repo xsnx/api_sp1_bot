@@ -50,29 +50,15 @@ def send_message(message):
     return bot.send_message(chat_id=CHAT_ID, text=message)
 
 
-# def main():
-#     current_timestamp = int(time.time())  # начальное значение timestamp
-#
-#     while True:
-#         try:
-#             new_homework = get_homework_statuses(current_timestamp)
-#             if new_homework.get('homeworks'):
-#                 send_message(parse_homework_status(new_homework.get('homeworks')[0]))
-#             current_timestamp = new_homework.get('current_date')  # обновить timestamp
-#             time.sleep(300)  # опрашивать раз в пять минут
-#
-#         except Exception as e:
-#             logging.exception(f"Exception - {e}")
-#             print(f'Бот упал с ошибкой: {e}')
-#             time.sleep(5)
-#             continue
-
 def main():
     current_timestamp = int(time.time())  # начальное значение timestamp
 
     while True:
         try:
-            send_message(f'test{time.time()}')
+            new_homework = get_homework_statuses(current_timestamp)
+            if new_homework.get('homeworks'):
+                send_message(parse_homework_status(new_homework.get('homeworks')[0]))
+            current_timestamp = new_homework.get('current_date')  # обновить timestamp
             time.sleep(300)  # опрашивать раз в пять минут
 
         except Exception as e:
@@ -80,6 +66,7 @@ def main():
             print(f'Бот упал с ошибкой: {e}')
             time.sleep(5)
             continue
+
 
 if __name__ == '__main__':
     main()
