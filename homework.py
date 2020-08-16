@@ -17,6 +17,7 @@ CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
 bot = telegram.Bot(token=TELEGRAM_TOKEN)
 
+
 def parse_homework_status(homework):
     homework_name = homework.get('homework_name')
     if homework_name is None:
