@@ -33,7 +33,8 @@ def parse_homework_status(homework):
 
 def get_homework_statuses(current_timestamp):
     if current_timestamp is None:
-        return 'current_timestamp is None'
+        logging.error('get_homework_statuses -current_timestamp is None:')
+        return 0
     headers = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
     data = {
         'from_date': current_timestamp,
