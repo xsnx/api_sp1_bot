@@ -7,8 +7,6 @@ import logging
 
 logging.basicConfig(level=logging.WARNING, filename='app.log',
                     format='%(asctime)s - %(message)s')
-log_bot_info = logging.getLogger('log_bot')
-log_bot_info.setLevel('INFO')
 
 load_dotenv()
 
