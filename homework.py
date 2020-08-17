@@ -19,11 +19,10 @@ bot = telegram.Bot(token=TELEGRAM_TOKEN)
 
 
 def parse_homework_status(homework):
-    try:
-        homework_name = homework.get('homework_name')
-    except Exception as e:
-        logging.exception(f"Exception - {e}")
-        print(f'Ошибка homework: {e}')
+    homework_name = homework.get('homework_name')
+    if homework_name is None:
+        logging.error('parse_homework_status - homework_name is None:')
+        return 'parse_homework_status homework_name is None'
     if homework['status'] != 'approved':
         verdict = 'К сожалению в работе нашлись ошибки.'
     else:
